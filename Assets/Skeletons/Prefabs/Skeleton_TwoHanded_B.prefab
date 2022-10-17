@@ -1474,6 +1474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 463548}
   - component: {fileID: 9536858}
+  - component: {fileID: 1927126155468168072}
   m_Layer: 0
   m_Name: Skeleton_TwoHanded_B
   m_TagString: Untagged
@@ -1518,6 +1519,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1927126155468168072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024549d8a96dbdb45a31d027e47de620, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveToPos: {fileID: 0}
+  mySpeed: 2
+  mytype: 1
 --- !u!1 &162436
 GameObject:
   m_ObjectHideFlags: 0

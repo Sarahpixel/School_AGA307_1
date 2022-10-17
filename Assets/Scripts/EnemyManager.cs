@@ -1,6 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
+
+//declaring the script outside of the function so that its 
+public enum EnemyType
+{
+    OneHand,TwoHand,Archer
+}
+public enum PatrolType
+{
+    Linear,Random,Loop
+}
 
 public class EnemyManager : MonoBehaviour
 {
@@ -11,6 +22,9 @@ public class EnemyManager : MonoBehaviour
     public string playerName = "Sarah";
     public int spawnCount=10;
     public string killCondition = "Two";
+    public float spawnDelay = 2f;
+
+    GameManager _GM;
 
 
     void Start()
@@ -19,11 +33,13 @@ public class EnemyManager : MonoBehaviour
         //enemies.Add(enemyTypes[1]);
         //enemies.Add(enemyTypes[2]);
         //enemies.Add(enemyTypes[3]);
-       
-        for (int i = 0; i < spawnCount; i++)
-        {
-            SpawnEnemy();
-        }
+
+        //for (int i = 0; i < spawnCount; i++)
+        //{
+        //    SpawnEnemy();
+        //}
+        _GM=FindObjectOfType<GameManager>();
+        StartCoroutine(SpawnDelayed());
         
     }
     private void Update()
@@ -41,6 +57,25 @@ public class EnemyManager : MonoBehaviour
         {
             KillSpecificEnemy(killCondition);
         }
+    }
+    /// <summary>
+    /// Spawns an enemy with delay until enemy count is reached
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SpawnDelayed()
+    {
+        yield return new WaitForSeconds(spawnDelay);
+        if (_GM.gameState == GameState.Playing)
+        {
+            SpawnEnemy();
+
+        }
+        
+        if (enemies.Count <= spawnCount)
+        {
+            StartCoroutine(SpawnDelayed());
+        }
+          
     }
     void SpawnEnemy()
     {
@@ -104,5 +139,12 @@ public class EnemyManager : MonoBehaviour
            
         }
         enemies.Clear();
+    }
+
+    public Transform GetRandomSpawnPoint()
+    {
+        return spawnPoints[Random.Range(0,spawnCount)];
+
+       
     }
 }

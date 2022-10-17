@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,8 +19,17 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
+    GameManager _GM;
+
+    private void Start()
+    {
+        _GM = FindObjectOfType<GameManager>();
+    }
     void Update()
     {
+        if (_GM.gameState != GameState.Playing)
+            return;
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if(isGrounded && velocity.y < 0)
@@ -40,5 +52,6 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+        
     }
 }
