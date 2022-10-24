@@ -1,35 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : GameBehaviour
 {
+    public static event Action<GameObject> OnEnemyHit = null;
+    public static event Action<GameObject> OnEnemyDie = null;
+
+
     public Transform moveToPos;
     public float mySpeed = 2f;
     public float myHealth = 100f;
+
     public EnemyType mytype;
     public PatrolType myPatrol;
 
     //manager class
     EnemyManager _EM;
 
+
     [Header("AI")]
-    int patrolPoint=0;
-    bool reverse=false;
+    int patrolPoint = 0;
+    bool reverse = false;
     Transform startpos;
     Transform endpos;
     Transform movePos;
     void Start()
     {
         _EM = FindObjectOfType<EnemyManager>();
-        //funtion return
-        moveToPos = _EM.GetRandomSpawnPoint();
+        Setup();
+        SetupAI();
         StartCoroutine(Move());
     }
     void SetupAI()
     {
-        startpos =Instantiate(new GameObject(),transform.position,transform.rotation). transform;
-        endpos =_EM.GetRandomSpawnPoint();
+        startpos = Instantiate(new GameObject(), transform.position, transform.rotation).transform;
+        endpos = _EM.GetRandomSpawnPoint();
+        endpos = EnemyManager.instance.GetRandomSpawnPoint();
         moveToPos = endpos;
 
 
@@ -41,20 +49,20 @@ public class Enemy : MonoBehaviour
             case EnemyType.OneHand:
                 myHealth = 100f;
                 mySpeed = 2f;
-                myPatrol=PatrolType.Linear;
+                myPatrol = PatrolType.Linear;
                 break;
-               
+
             case EnemyType.TwoHand:
                 myHealth = 200f;
                 mySpeed = 1f;
-                myPatrol=PatrolType.Loop;
+                myPatrol = PatrolType.Loop;
                 break;
             case EnemyType.Archer:
 
                 myHealth = 50f;
                 mySpeed = 3f;
                 myPatrol = PatrolType.Random;
-                break;  
+                break;
         }
 
 
@@ -63,26 +71,58 @@ public class Enemy : MonoBehaviour
             myHealth = 100f;
             mySpeed = 2f;
         }
-     
-        if(mytype == EnemyType.TwoHand)
+
+        if (mytype == EnemyType.TwoHand)
         {
             myHealth = 200f;
             mySpeed = 1f;
         }
-         
-        if(mytype == EnemyType.Archer)
+
+        if (mytype == EnemyType.Archer)
         {
             myHealth = 50f;
             mySpeed = 3f;
         }
-        
+
     }
+
+
+
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Hit(10);
+        }
+
+
     }
+    private void Hit(int _damage)
+    {
+        if (myHealth <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            OnEnemyHit?.Invoke(gameObject);
+       
+        }
+        //myHealth = -_damage;
+       
+    }
+    
+    void Die()
+    {
+        StopAllCoroutines(); //safety 
+        OnEnemyDie.Invoke(gameObject);
+        //_GM.AddScore(100);
+        //_EM.KillEnemy(gameObject);
+    }
+    
 
     IEnumerator Move()
     {

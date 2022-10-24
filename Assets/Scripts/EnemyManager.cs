@@ -13,18 +13,30 @@ public enum PatrolType
     Linear,Random,Loop
 }
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager :Singleton<EnemyManager>
 {
+    protected static GameManager _GM { get { return GameManager.instance; } }//brings our manager to our game manager
+    protected static EnemyManager _EM { get { return EnemyManager.instance; } }
+
+
+
     public Transform[] spawnPoints; // spawn point for our enemies
     public GameObject[] enemyTypes; //contains our different enemy types
     public List<GameObject> enemies; //a list containing our enemies
+
+
     public string[] enemyNames;
     public string playerName = "Sarah";
     public int spawnCount=10;
     public string killCondition = "Two";
     public float spawnDelay = 2f;
-
+    //manager
     GameManager _GM;
+
+
+
+
+
 
 
     void Start()
@@ -105,7 +117,7 @@ public class EnemyManager : MonoBehaviour
     /// kills a specific enemy in our game
     /// </summary>
     /// <param name="_enemy">the enemy we wish to kill</param>
-    void KillEnemy(GameObject _enemy)
+   public void KillEnemy(GameObject _enemy)
     {
         if(enemies.Count == 0)
             return;
@@ -143,8 +155,19 @@ public class EnemyManager : MonoBehaviour
 
     public Transform GetRandomSpawnPoint()
     {
-        return spawnPoints[Random.Range(0,spawnCount)];
+        return spawnPoints[Random.Range(0,spawnPoints.Length)];
 
        
+    }
+
+    private void OnEnable()
+    {
+        Enemy.OnEnemyDie += KillEnemy;
+    }
+
+    private void OnDisable()
+    {
+
+        Enemy.OnEnemyDie -= KillEnemy;
     }
 }
