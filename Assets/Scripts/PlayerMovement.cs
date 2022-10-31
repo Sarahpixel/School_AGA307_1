@@ -18,8 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 velocity;
     bool isGrounded;
+    GameManager _GM;
 
-   
+
 
     private void Start()
     {

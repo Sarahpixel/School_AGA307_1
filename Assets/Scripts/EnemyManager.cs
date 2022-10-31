@@ -15,11 +15,6 @@ public enum PatrolType
 
 public class EnemyManager :Singleton<EnemyManager>
 {
-    protected static GameManager _GM { get { return GameManager.instance; } }//brings our manager to our game manager
-    protected static EnemyManager _EM { get { return EnemyManager.instance; } }
-
-
-
     public Transform[] spawnPoints; // spawn point for our enemies
     public GameObject[] enemyTypes; //contains our different enemy types
     public List<GameObject> enemies; //a list containing our enemies
@@ -31,7 +26,7 @@ public class EnemyManager :Singleton<EnemyManager>
     public string killCondition = "Two";
     public float spawnDelay = 2f;
     //manager
-    GameManager _GM;
+    //GameManager _GM;
 
 
 
@@ -50,8 +45,8 @@ public class EnemyManager :Singleton<EnemyManager>
         //{
         //    SpawnEnemy();
         //}
-        _GM=FindObjectOfType<GameManager>();
-        StartCoroutine(SpawnDelayed());
+        //_GM=FindObjectOfType<GameManager>();
+        //StartCoroutine(SpawnDelayed());
         
     }
     private void Update()
@@ -97,7 +92,8 @@ public class EnemyManager :Singleton<EnemyManager>
         GameObject enemy=Instantiate(enemyTypes[enemyNumber], spawnPoints[spawnPoint].position, spawnPoints[spawnPoint].rotation,transform);
         enemies.Add(enemy);
         print(enemies.Count);
-        
+        _UI.UpdateEnemyCount(enemies.Count);
+
         //for(int i =0; i < enemyTypes.Length; i++)
         //{
         //    print(i+1);
@@ -129,6 +125,7 @@ public class EnemyManager :Singleton<EnemyManager>
         //enemies.RemoveAt(enemies.Count-1);
 
         print(enemies.Count);
+        
     }
 
     void KillSpecificEnemy(string _condition)

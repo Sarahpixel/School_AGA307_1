@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState { Title, Playing, Paused, GameOver, }
 public enum Difficulty { Easy, Medium, Hard, }
@@ -15,9 +17,11 @@ public class GameManager : Singleton<GameManager>
     public Difficulty difficulty;
     public int score;
     int scoreMultiplyer =1;
-
+    float timer;
+  
     private void Start()
     {
+        timer = 0;
         Setup();
         OnDifficultyChanged?.Invoke(difficulty);
     }
@@ -28,9 +32,38 @@ public class GameManager : Singleton<GameManager>
     //    else
     //        Destroy(this); // we're only allowed to have one copy of the gamemanager
     //}
+    private void Update()
+    {
+        
+        if (gameState == GameState.Playing)
+        {
+            timer += Time.deltaTime;
+            _UI.UpdateTimer(timer);
+        }
+        
+    }
     public void AddScore(int _score)
     {
         score += _score*scoreMultiplyer;
+        _UI.UpdateScore(_score);
+    }
+
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("MainGame");
+    }
+    public void LoidTitle()
+    {
+        SceneManager.LoadScene("Title");
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    public void ChangeDifficulty(int _difficulty) //based on the int value
+    {
+        difficulty = (Difficulty)_difficulty;
+        Setup();
     }
     private void OnEnable()
     {

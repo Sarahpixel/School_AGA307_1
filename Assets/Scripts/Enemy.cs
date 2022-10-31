@@ -16,8 +16,8 @@ public class Enemy : GameBehaviour
     public EnemyType mytype;
     public PatrolType myPatrol;
 
-    //manager class
-    EnemyManager _EM;
+    ////manager class
+    
 
 
     [Header("AI")]
@@ -28,7 +28,6 @@ public class Enemy : GameBehaviour
     Transform movePos;
     void Start()
     {
-        _EM = FindObjectOfType<EnemyManager>();
         Setup();
         SetupAI();
         StartCoroutine(Move());
@@ -119,10 +118,10 @@ public class Enemy : GameBehaviour
     {
         StopAllCoroutines(); //safety 
         OnEnemyDie.Invoke(gameObject);
-        //_GM.AddScore(100);
-        //_EM.KillEnemy(gameObject);
+        _GM.AddScore(100);
+        _EM.KillEnemy(gameObject);
     }
-    
+
 
     IEnumerator Move()
     {
@@ -146,7 +145,7 @@ public class Enemy : GameBehaviour
 
 
 
-        //moveToPos = _EM.GetRandomSpawnPoint();
+        moveToPos = _EM.GetRandomSpawnPoint();
         transform.LookAt(moveToPos);
        while (Vector3.Distance(transform.position, moveToPos.position) > 0.3f)
         {
